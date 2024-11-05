@@ -28,7 +28,7 @@ cmake-3.31.0-rc3.zip
 *cmakeなんて使いたくねえ*
 という人は
 ```
-g++ -o -O2 -Wall -Wextra src/main.c -o main
+g++ -O2 -Wall -Wextra src/main.cpp -o main
 ```
 を利用してください
 
