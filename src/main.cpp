@@ -6,12 +6,11 @@
 #include <string>
 #include <utility>
 #include <cstdint>
-#include <iomanip>
 #include <numeric>
 #include <fstream>
 #include <algorithm>
 #include <limits>
-#include <deque>
+#include <tuple>
 
 struct Instruction {
 	// 各フィールドをビットフィールドとして定義
@@ -44,13 +43,13 @@ enum Opcode {
 
 Opcode stringToOpcode(const std::string& str) {
 	if (str == "NOP") return NOP;
-	else if (str == "ADD" || str == "add") return ADD;
-	else if (str == "SUB" || str == "sub") return SUB;
-	else if (str == "AND" || str == "and") return AND;
-	else if (str == "OR" || str == "or") return OR;
+	else if (str == "ADD"  || str == "add")  return ADD;
+	else if (str == "SUB"  || str == "sub")  return SUB;
+	else if (str == "AND"  || str == "and")  return AND;
+	else if (str == "OR"   || str == "or")   return OR;
 	else if (str == "ADDI" || str == "addi") return ADDI;
 	else if (str == "SUBI" || str == "subi") return SUBI;
-	else if (str == "LDI" || str == "ldi") return LDI;
+	else if (str == "LDI"  || str == "ldi")  return LDI;
 	else throw std::runtime_error("Unknown opcode: " + str);
 }
 
@@ -228,7 +227,33 @@ void writeBack(Instruction& inst, std::vector<std::int16_t>& rom) {
 	std::cout << printResultWriteBack(rom) << std::endl;
 }
 
-int main() {
+int main(int argc, char* argv[]) {
+	bool isFile = false;
+
+	if (argc == 2) {
+		isFile = true;
+		// DATA_DIR_PATHを使用してパスを作成
+		std::string filename = std::string(DATA_DIR_PATH) + "/" + argv[1];
+
+		if (filename.substr(filename.find_last_of(".") + 1) == "csv") {
+			std::ifstream file(filename);
+			if (!file.is_open()) {
+				std::cerr << "ファイルが開けません: " << filename << std::endl;
+				return 1;
+			}
+			std::string line;
+			while (std::getline(file, line)) {
+				std::cout << line << std::endl;
+			}
+			file.close();
+		} else {
+			std::cerr << "CSVファイルではありません: " << filename << std::endl;
+			return 1;
+		}
+	} else {
+		std::cerr << "使い方: " << argv[0] << " <ファイル名>" << std::endl;
+		return 1;
+	}
 	// ADD命令のオペコードとレジスタ
 	std::string code;
 	std::vector<std::string> words;
@@ -236,7 +261,7 @@ int main() {
 
 	std::vector<std::int16_t> rom(16, 0);
 
-	std::cout << "レジスタの初期化が完了しました\n";
+	std::cout << "レジスタの初期化:true\n";
 
 	std::cout << "命令を入力してください(qで終了):\n";
 

@@ -12,6 +12,12 @@ set(SOURCE
     src/main.cpp
 )
 
+set(DATA_DIR_PATH "${CMAKE_SOURCE_DIR}/data")
+
+
+# プリプロセッサマクロに設定
+add_compile_definitions(DATA_DIR_PATH="${DATA_DIR_PATH}")
+
 add_executable(main ${SOURCE})
 
 target_compile_options(main PRIVATE -g3 -O2 -Wall -Wextra)
