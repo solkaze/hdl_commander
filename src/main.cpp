@@ -41,6 +41,8 @@ enum Opcode {
 	LDI  = 0x7
 };
 
+std::vector<std::vector<std::string>> data;
+
 Opcode stringToOpcode(const std::string& str) {
 	if (str == "NOP") return NOP;
 	else if (str == "ADD"  || str == "add")  return ADD;
