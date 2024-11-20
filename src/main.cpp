@@ -37,8 +37,8 @@ enum Opcode {
 	SUB  = 0x2,
 	AND  = 0x3,
 	OR   = 0x4,
-	ADDI = 0x5,
-	SUBI = 0x6,
+	ADDI = 0x9,
+	SUBI = 0xA,
 	LDI  = 0xC
 };
 
@@ -162,9 +162,9 @@ std::string printResultDecode(Instruction& inst) {
 void decode(Instruction& inst, std::vector<std::int16_t> rom, std::pair<int, std::int16_t> pre_reg) {
 	// レジスタの値を取得する
 	if (inst.rdest == pre_reg.first) inst.read_rdest = pre_reg.second;
-	inst.read_rdest = rom[inst.rdest - 1];
+	inst.read_rdest = rom[inst.rdest];
 
-	if (inst.opcode <= OR) inst.read_rsrc = rom[inst.rsrc - 1];
+	if (inst.opcode <= OR) inst.read_rsrc = rom[inst.rsrc];
 	
 	std::cout << "デコード結果↓\n";
 	std::cout << printResultDecode(inst) << std::endl;
@@ -215,7 +215,7 @@ std::string printResultWriteBack(std::vector<std::int16_t> rom) {
 	std::string result = "";
 	for (size_t i = 0; i < rom.size(); ++i) {
 		hexStream << std::hex << std::uppercase << std::setw(4) << std::setfill('0') << rom[i];
-		result += "R" + std::to_string(i + 1) + "\t: " + hexStream.str() + " (" + std::to_string(rom[i]) + ")" + "\n";
+		result += "R" + std::to_string(i) + "\t: " + hexStream.str() + " (" + std::to_string(rom[i]) + ")" + "\n";
 		hexStream.str("");
 		hexStream.clear();
 	}
@@ -223,7 +223,7 @@ std::string printResultWriteBack(std::vector<std::int16_t> rom) {
 }
 
 void writeBack(Instruction& inst, std::vector<std::int16_t>& rom) {
-	rom[inst.rdest - 1] = inst.read_rdest;
+	rom[inst.rdest] = inst.read_rdest;
 	std::cout << "書き込み結果↓\n";
 	std::cout << printResultWriteBack(rom) << std::endl;
 }
