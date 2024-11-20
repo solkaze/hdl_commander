@@ -37,9 +37,9 @@ enum Opcode {
 	SUB  = 0x2,
 	AND  = 0x3,
 	OR   = 0x4,
-	ADDI = 0x9,
-	SUBI = 0xA,
-	LDI  = 0xC
+	ADDI = 0x5,
+	SUBI = 0x6,
+	LDI  = 0x7
 };
 
 Opcode stringToOpcode(const std::string& str) {
