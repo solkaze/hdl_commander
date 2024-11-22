@@ -41,8 +41,6 @@ enum Opcode {
 	LDI  = 0x7
 };
 
-std::vector<std::vector<std::string>> data;
-
 Opcode stringToOpcode(const std::string& str) {
 	if (str == "NOP") return NOP;
 	else if (str == "ADD"  || str == "add")  return ADD;
@@ -229,33 +227,7 @@ void writeBack(Instruction& inst, std::vector<std::int16_t>& rom) {
 	std::cout << printResultWriteBack(rom) << std::endl;
 }
 
-int main(int argc, char* argv[]) {
-	bool isFile = false;
-
-	if (argc == 2) {
-		isFile = true;
-		// DATA_DIR_PATHを使用してパスを作成
-		std::string filename = std::string(DATA_DIR_PATH) + "/" + argv[1];
-
-		if (filename.substr(filename.find_last_of(".") + 1) == "csv") {
-			std::ifstream file(filename);
-			if (!file.is_open()) {
-				std::cerr << "ファイルが開けません: " << filename << std::endl;
-				return 1;
-			}
-			std::string line;
-			while (std::getline(file, line)) {
-				std::cout << line << std::endl;
-			}
-			file.close();
-		} else {
-			std::cerr << "CSVファイルではありません: " << filename << std::endl;
-			return 1;
-		}
-	} else {
-		std::cerr << "使い方: " << argv[0] << " <ファイル名>" << std::endl;
-		return 1;
-	}
+int main() {
 	// ADD命令のオペコードとレジスタ
 	std::string code;
 	std::vector<std::string> words;
