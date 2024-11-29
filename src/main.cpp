@@ -32,13 +32,13 @@ struct Instruction {
 enum Opcode {
 	//! この順番が保証されなければ動作しません
 	NOP  = 0x0,
-	ADD  = 0x1,
-	SUB  = 0x2,
-	AND  = 0x3,
-	OR   = 0x4,
-	ADDI = 0x5,
-	SUBI = 0x6,
-	LDI  = 0x7
+	ADD  = 0x8,
+	SUB  = 0x9,
+	AND  = 0xA,
+	OR   = 0xB,
+	ADDI = 0xC,
+	SUBI = 0xD,
+	LDI  = 0x1
 };
 
 Opcode stringToOpcode(const std::string& str) {
@@ -103,14 +103,14 @@ void fetch(Instruction& inst, std::vector<std::string> words) {
 
 	// オペコードによって処理を変える
 	// ADD, SUB, AND, OR
-	if (opcode >= ADD && opcode <= OR) {
+	if (opcode == ADD || opcode == SUB || opcode == AND || opcode == OR) {
 		// reg2の取得
 		if (regst == "R" || regst == "r") {
 			rsrc = std::stoi(words[2].substr(1));
 		} else {
 			throw std::runtime_error("Unknown register: " + words[2]);
 		}
-	} else if (opcode <= LDI) {
+	} else if (opcode == ADDI || opcode == SUBI || opcode == LDI) {
 		// imm8の取得
 		imm8 = std::stoi(words[2]);
 
@@ -121,9 +121,9 @@ void fetch(Instruction& inst, std::vector<std::string> words) {
 
 	// imm8を0-255の範囲に制限する（8ビットに収める）
 
-	if (opcode >= ADD && opcode <= OR) {
+	if (opcode == ADD || opcode == SUB || opcode == AND || opcode == OR) {
 		instruction = (opcode << 12) | (rdest << 8) | (rsrc << 4);
-	} else if (opcode <= LDI) {
+	} else if (opcode == ADDI || opcode == SUBI || opcode == LDI) {
 		instruction = (opcode << 12) | (rdest << 8) | (imm8 & 0xFF); // imm8を下位8ビットに格納
 	} else {
 		instruction = 0;
@@ -163,7 +163,7 @@ void decode(Instruction& inst, std::vector<std::int16_t> rom, std::pair<int, std
 	if (inst.rdest == pre_reg.first) inst.read_rdest = pre_reg.second;
 	inst.read_rdest = rom[inst.rdest];
 
-	if (inst.opcode <= OR) inst.read_rsrc = rom[inst.rsrc];
+	if (inst.opcode == ADD || inst.opcode == SUB || inst.opcode == AND || inst.opcode == OR) inst.read_rsrc = rom[inst.rsrc];
 	
 	std::cout << "デコード結果↓\n";
 	std::cout << printResultDecode(inst) << std::endl;
