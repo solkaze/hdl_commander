@@ -1,16 +1,5 @@
-#include <iostream>
-#include <sstream>
-#include <vector>
-#include <bitset>
-#include <iomanip>
-#include <string>
-#include <utility>
-#include <cstdint>
-#include <numeric>
-#include <fstream>
-#include <algorithm>
-#include <limits>
-#include <tuple>
+#include <bits/stdc++.h>
+
 
 struct Instruction {
 	// 各フィールドをビットフィールドとして定義
